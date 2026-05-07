@@ -1,0 +1,26 @@
+# Byte-compiled
+__pycache__/
+*.py[cod]
+
+# Ambientes virtuais
+venv/
+env/
+.env
+
+# IDEs
+.vscode/
+.idea/
+
+# Logs e DBs
+*.log
+*.db
+*.sqlite3
+
+# Distribuição
+dist/
+build/
+*.egg-info/
+
+# OS
+.DS_Store
+Thumbs.db
