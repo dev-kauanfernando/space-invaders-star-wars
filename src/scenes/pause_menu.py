@@ -4,7 +4,7 @@ from src.utils.input import Input
 
 class PauseMenu:
     
-    # incializa configuracoes do pause_menu(self)
+    # incializa a classe PauseMenu
     def __init__(self, screen):
         self.screen = screen
         self.font = config.Screen.font()
@@ -19,7 +19,7 @@ class PauseMenu:
         rects = []
         for i, text in enumerate(options):
             surface = self.font.render(text, False, self.color)
-            rect = surface.get_rect(center=(config.Screen.WIDTH / 2, start_y + i * 100))
+            rect = surface.get_rect(center=(config.Screen.WIDTH / 2, start_y + i * 75))
             self.screen.blit(surface, rect)
             rects.append(rect)
-        return Input.check_click(rects, options, events)
+        return Input(events).check_click(rects, options)

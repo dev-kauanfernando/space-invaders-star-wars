@@ -7,9 +7,8 @@ class Screen:
     FPS = 60
     TITLE = "A Invasão do Império: O Despertar do Guardião"
     
-    @staticmethod
     def font():
-        return pygame.font.Font("./assets/font/PressStart2P-Regular.ttf", 50)
+        return pygame.font.Font("./assets/font/PressStart2P-Regular.ttf", 32)
 
 # constantes de cores
 class Colors:
