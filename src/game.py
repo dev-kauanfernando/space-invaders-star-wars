@@ -17,13 +17,14 @@ class Game:
         self.running = True
         self.state = "menu"
         self.scene = MainMenu(self.screen)
+        self.input = Input()
     
     # loop principal    
     def run(self):
         while self.running:
             self.clock.tick(config.Screen.FPS)
             self.events = pygame.event.get()
-            Input(self.events).handle_events()
+            self.running = self.input.handle_events(self.events)
             self.update()
             self.draw()
         pygame.quit()
@@ -68,5 +69,6 @@ class Game:
     # desenha cenas na tela
     def draw(self):
         self.screen.fill(config.Colors.BLACK)
+
         self.scene.draw()
         pygame.display.flip()

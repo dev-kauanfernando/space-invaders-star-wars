@@ -22,25 +22,19 @@ class Screen:
     
         cls.WIDTH, cls.HEIGHT = surface.get_size()
         cls._update_font()
-        cls.layout()
         return surface
     
     # ajusta espacamento dos itens presentes na tela    
     @classmethod
-    def layout(cls):
-        if cls.MOBILE:
-            cls.GAP = 100
-        else:
-            cls.GAP = 75
+    def scale(cls, value):
+        return int(value *(cls.WIDTH / cls._WIDTH))
     
     # ajusta o tamanho da fonte de acordo a dimensao da tela
     @classmethod
     def _update_font(cls):
         path = os.path.join("assets", "font", "PressStart2P-Regular.ttf")
-        if cls.MOBILE:
-            cls.FONT = pygame.font.Font(path, 48)
-        else:
-            cls.FONT = pygame.font.Font(path, 32)
+        font_size = cls.scale(24)
+        cls.FONT = pygame.font.Font(path, font_size)
 
 # constantes de cores
 class Colors:

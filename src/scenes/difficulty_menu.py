@@ -9,21 +9,23 @@ class DifficultyMenu:
         self.screen = screen
         self.font = config.Screen.FONT
         self.color = config.Colors.YELLOW
+        self.gap = config.Screen.scale(60)
+        self.height = config.Screen.scale(-25)
         self.options = ["Facil", "Medio", "Dificil"]
         self.rects = []
         
     # lida com entrada
     def handle_input(self, events):
-        return Input(events).check_click(self.rects, self.options)
+        return Input().check_click(self.rects, self.options, events)
        
     # desenha as opcoes   
     def draw(self):
-        total_height = len(self.options) * -15
+        total_height = len(self.options) * self.height
         start_y = (config.Screen.HEIGHT - total_height) / 2
         
         self.rects = []
         for i, text in enumerate(self.options):
             surface = self.font.render(text, False, self.color)
-            rect = surface.get_rect(center=(config.Screen.WIDTH / 2, start_y + i * 75))
+            rect = surface.get_rect(center=(config.Screen.WIDTH / 2, start_y + i * self.gap))
             self.screen.blit(surface, rect)
             self.rects.append(rect)
