@@ -7,19 +7,24 @@ class MainMenu:
     # incializa a classe MainMenu
     def __init__(self, screen):
         self.screen = screen
-        self.font = config.Screen.font()
+        self.font = config.Screen.FONT
+        self.gap = config.Screen.GAP
         self.color = config.Colors.YELLOW
-        
-    # menu principal    
-    def main_menu(self, events):
-        options = ["Jogar", "Dificuldade", "Sair"]
-        total_height = len(options) * -15
+        self.options = ["Jogar", "Dificuldade", "Sair"]
+        self.rects = []
+    
+    # lida com entrada
+    def handle_input(self, events):
+        return Input(events).check_click(self.rects, self.options)
+       
+    # desenha as opcoes   
+    def draw(self):
+        total_height = len(self.options) * -15
         start_y = (config.Screen.HEIGHT - total_height) / 2
         
-        rects = []
-        for i, text in enumerate(options):
+        self.rects = []
+        for i, text in enumerate(self.options):
             surface = self.font.render(text, False, self.color)
-            rect = surface.get_rect(center=(config.Screen.WIDTH / 2, start_y + i * 75))
+            rect = surface.get_rect(center=(config.Screen.WIDTH / 2, start_y + i * self.gap))
             self.screen.blit(surface, rect)
-            rects.append(rect)
-        return Input(events).check_click(rects, options)
+            self.rects.append(rect)
