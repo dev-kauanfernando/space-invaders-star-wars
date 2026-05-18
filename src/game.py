@@ -1,31 +1,23 @@
 import pygame
 import sys
 import os
-import config
-from src.scenes.main_menu import MainMenu
-from src.scenes.difficulty_menu import DifficultyMenu
-from src.scenes.pause_menu import PauseMenu
-from src.utils.input import Input
+from config import Screen, Colors
+from src.scenes import MainMenu, DifficultyMenu, PauseMenu, Gameplay
+from src.utils import Input, Assets
 
 class Game:
     
     # inicializa a classe Game
     def __init__(self):
         pygame.init()
-        self.screen = config.Screen.init()
-        pygame.display.set_caption(config.Screen.TITLE)
-        img = pygame.image.load(os.path.join("assets", "img", "wallpaper.png")).convert()
-        img_w, img_h = img.get_size()
-        
-        self.background = pygame.Surface((config.Screen.WIDTH, config.Screen.HEIGHT))
-        for x in range(0, config.Screen.WIDTH, img_w):
-            for y in range(0, config.Screen.HEIGHT, img_h):
-                self.background.blit(img, (x, y))
-        
+        self.screen = Screen.init()
+        pygame.display.set_caption(Screen.TITLE)
+        self.background = Assets.background()
         self.clock = pygame.time.Clock()
         self.running = True
         self.state = "menu"
         self.scenes = {
+            "gameplay": Gameplay(self.screen, difficulty=1),
             "menu": MainMenu(self.screen),
             "difficulty": DifficultyMenu(self.screen),
             "pause": PauseMenu(self.screen)
@@ -36,7 +28,7 @@ class Game:
     # loop principal    
     def run(self):
         while self.running:
-            self.clock.tick(config.Screen.FPS)
+            self.clock.tick(Screen.FPS)
             self.events = pygame.event.get()
             self.running = self.input.handle_events(self.events)
             self.update()
@@ -46,39 +38,45 @@ class Game:
     
     # controle de estado
     def update(self):
-        action = self.scene.handle_input(self.events)
+        action = self.scene.update(self.events)
         
         # menu inicial
         if self.state == "menu":
-            if action == "Jogar":
-                pass
-            elif action == "Dificuldade":
+            if action == "JOGAR":
+                self.state = "gameplay"
+                self.scene = self.scenes["gameplay"]
+            elif action == "DIFICULDADE":
                 self.state = "difficulty"
                 self.scene = self.scenes["difficulty"]
-            elif action == "Sair":
+            elif action == "SAIR":
                 self.running = False
-                
+    
         # menu dificuldade
         elif self.state == "difficulty":
-            if action == "Facil":
+            if action == "FACIL":
                 self.state = "menu"
                 self.scene = self.scenes["menu"]
-            elif action == "Medio":
+            elif action == "MEDIO":
                 self.state = "menu"
                 self.scene = self.scenes["menu"]
-            elif action == "Dificil":
+            elif action == "DIFICIL":
                 self.state = "menu"
                 self.scene = self.scenes["menu"]
                 
         # menu de pausa
         elif self.state == "pause":
-            if action == "Continuar":
+            if action == "CONTINUAR":
                 pass
-            elif action == "Voltar ao Menu":
+            elif action == "VOLTAR AO MENU":
                 self.state = "menu"
                 self.scene = self.scenes["menu"]
-            elif action == "Sair":
+            elif action == "SAIR":
                 self.running = False
+                
+        elif self.state == "gameplay":
+            if action:
+                self.state = "pause"
+                self.scene = self.scenes["pause"]
     
     # desenha cenas na tela
     def draw(self):

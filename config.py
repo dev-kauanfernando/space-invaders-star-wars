@@ -16,33 +16,42 @@ class Screen:
         
         if cls.MOBILE:
             info = pygame.display.Info()
-            surface = pygame.display.set_mode((info.current_w, info.current_h), pygame.FULLSCREEN)
+            surface = pygame.display.set_mode(
+                (info.current_w, info.current_h),
+                pygame.FULLSCREEN
+            )
         else:
-            surface = pygame.display.set_mode((cls._WIDTH, cls._HEIGHT))
-    
+            surface = pygame.display.set_mode(
+                (cls._WIDTH, cls._HEIGHT)
+            )
+            
         cls.WIDTH, cls.HEIGHT = surface.get_size()
-        cls.GAP = cls.scale(100)
-        cls.ITEM_HEIGHT = cls.scale(100)
-        cls._update_font()
+        
+        scale_x = cls.WIDTH / cls._WIDTH
+        scale_y = cls.HEIGHT / cls._HEIGHT
+        cls._scale_factor = min(scale_x, scale_y)
+        
+        if cls.MOBILE:
+            cls._scale_factor *= 1.8
+        cls.FONT = pygame.font.Font(Path._FONT, cls.scale(26))
         return surface
     
     # ajusta espacamento dos itens presentes na tela    
     @classmethod
     def scale(cls, value):
-        return int(value * (cls.WIDTH / cls._WIDTH))
-    
-    # ajusta o tamanho da fonte de acordo a dimensao da tela
-    @classmethod
-    def _update_font(cls):
-        path = os.path.join("assets", "font", "PressStart2P-Regular.ttf")
-        font_size = cls.scale(24)
-        if cls.MOBILE:
-            font_size = int(font_size * 2)
-        cls.FONT = pygame.font.Font(path, font_size)
+        return int(value * cls._scale_factor)
 
 # constantes de cores
 class Colors:
     BLACK = (0, 0, 0)
     WHITE = (255, 255, 255)
     RED = (255, 0, 0)
+    BLUE = (0, 90, 255)
     YELLOW = (255, 232, 31)
+    
+# localização dos path
+class Path:
+    _IMG = os.path.join("assets", "img")
+    _FONT = os.path.join("assets", "font", "PressStart2P-Regular.ttf")
+    WALLPAPERS = os.path.join(_IMG, "wallpapers")
+    SPRITES = os.path.join(_IMG, "sprites")

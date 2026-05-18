@@ -1,37 +1,25 @@
-import pygame
-import os
-import config
-from src.utils.input import Input
+from config import Colors
+from src.utils import Input, Assets, Render
 
 class MainMenu:
     
     # incializa a classe MainMenu
     def __init__(self, screen):
         self.screen = screen
-        self.font = config.Screen.FONT
-        self.item_height = config.Screen.ITEM_HEIGHT
-        self.color = config.Colors.YELLOW
-        self.options = ["Jogar", "Dificuldade", "Sair"]
-        self.rects = []
-        self.title = pygame.transform.scale(
-            pygame.image.load(os.path.join("assets", "img", "star-wars-logo.png")).convert_alpha(),
-            (config.Screen.scale(512), config.Screen.scale(220))
-        )
-        self.rect_title = self.title.get_rect(center=(config.Screen.WIDTH / 2,  config.Screen.scale(300)))
+        self.input = Input()
+        self.options = ["JOGAR", "DIFICULDADE", "SAIR"]
+        self.surfaces, self.rects = Render.render_options(self.options, Colors.YELLOW, 200)
+        self.title, self.rect_title = Assets.title()
+        self.player, self.rect_player = Assets.player()
     
     # lida com entrada
-    def handle_input(self, events):
-        return Input().check_click(self.rects, self.options, events)
+    def update(self, events):
+        return self.input.check_click(self.rects, self.options, events)
        
     # desenha as opcoes   
     def draw(self):
         self.screen.blit(self.title, self.rect_title)
-        total_height = len(self.options) * self.item_height
-        start_y = (config.Screen.HEIGHT - total_height) / 2 + config.Screen.scale(100)
+        self.screen.blit(self.player, self.rect_player)
         
-        self.rects = []
-        for i, text in enumerate(self.options):
-            surface = self.font.render(text, False, self.color)
-            rect = surface.get_rect(center=(config.Screen.WIDTH / 2, start_y + i * self.item_height))
+        for surface, rect in zip(self.surfaces, self.rects):
             self.screen.blit(surface, rect)
-            self.rects.append(rect)

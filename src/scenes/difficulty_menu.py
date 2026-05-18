@@ -1,31 +1,19 @@
-import pygame
-import config
-from src.utils.input import Input
+from config import Colors
+from src.utils import Input, Render
 
 class DifficultyMenu:
     
     # incializa a classe DifficultyMenu
     def __init__(self, screen):
         self.screen = screen
-        self.font = config.Screen.FONT
-        self.color = config.Colors.YELLOW
-        self.gap = config.Screen.scale(60)
-        self.height = config.Screen.scale(-25)
-        self.options = ["Facil", "Medio", "Dificil"]
-        self.rects = []
+        self.options = ["FACIL", "MEDIO", "DIFICIL"]
+        self.surfaces, self.rects = Render.render_options(self.options, Colors.YELLOW, 0)
         
     # lida com entrada
-    def handle_input(self, events):
+    def update(self, events):
         return Input().check_click(self.rects, self.options, events)
        
     # desenha as opcoes   
     def draw(self):
-        total_height = len(self.options) * self.height
-        start_y = (config.Screen.HEIGHT - total_height) / 2
-        
-        self.rects = []
-        for i, text in enumerate(self.options):
-            surface = self.font.render(text, False, self.color)
-            rect = surface.get_rect(center=(config.Screen.WIDTH / 2, start_y + i * self.gap))
+        for surface, rect in zip(self.surfaces, self.rects):
             self.screen.blit(surface, rect)
-            self.rects.append(rect)
